@@ -1,4 +1,5 @@
 import 'package:crafthack_app/screens/character.dart';
+import 'package:crafthack_app/screens/dice.dart';
 import 'package:flutter/material.dart';
 
 import 'utils/Lazy.dart';
@@ -32,6 +33,7 @@ class _RootSceneState extends State<RootScene> {
   bool battleAvailable = false;
 
   Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
+  Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,8 @@ class _RootSceneState extends State<RootScene> {
             title: Text("Битва"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.accessibility_new),
-            title: Text("Состояние")
+            icon: Icon(Icons.check_box_outline_blank),
+            title: Text("Кубик")
           )
         ],
         onTap: _onItemTapped,
@@ -65,6 +67,8 @@ class _RootSceneState extends State<RootScene> {
     switch(index) {
       case 0:
         return _characterScreen.get();
+      case 2:
+        return _diceScreen.get();
     }
   }
 
