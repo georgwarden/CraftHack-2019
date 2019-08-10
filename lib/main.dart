@@ -44,6 +44,14 @@ class _RootSceneState extends State<RootScene> {
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box),
             title: Text("Персонаж")
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.border_all),
+            title: Text("Характеристики")
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.accessibility_new),
+            title: Text("Состояние")
           )
         ],
         onTap: _onItemTapped,
