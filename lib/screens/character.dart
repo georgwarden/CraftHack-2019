@@ -51,9 +51,8 @@ class CharacterScreen extends StatelessWidget {
             "Будучи в детстве изгнанным из собственного племени, Конан долгое время скитался по пустошам Аркании, сражаясь со страшными монстрами, пока не обрёл величайшую мощь, которой человек может достигнуть.",
             style: TextStyle(color: Colors.black54, fontSize: 16),
           ),
-          Padding(
-            padding: EdgeInsets.all(8),
-          ),
+          Divider(color: Colors.black, height: 16,),
+          Padding(padding: EdgeInsets.only(top: 8),),
           FutureBuilder(
             future: fChar.then((char) => char.chars),
             builder: (ctx, snap) {
@@ -88,7 +87,7 @@ class CharacterScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.all(4),
                 ),
-                attrText(attribute.toString()),
+                attrText(attribute.toString().replaceAll('CharOption.', '')),
                 attrText(":  "),
                 attrText(attributes[attribute].total().toString())
               ],
