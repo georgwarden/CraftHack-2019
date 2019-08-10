@@ -69,6 +69,7 @@ class CharacterScreen extends StatelessWidget {
               }
             },
           ),
+          Divider(color: Colors.black,),
           FutureBuilder(
             future: fChar.then((char) => char.skills),
             builder: (ctx, snap) {
