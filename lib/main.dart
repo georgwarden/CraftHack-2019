@@ -29,6 +29,7 @@ class RootScene extends StatefulWidget {
 class _RootSceneState extends State<RootScene> {
 
   int _selectedIndex = 0;
+  bool battleAvailable = false;
 
   Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
 
@@ -43,11 +44,11 @@ class _RootSceneState extends State<RootScene> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.account_box),
-            title: Text("Персонаж")
+            title: Text("Персонаж"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.border_all),
-            title: Text("Характеристики")
+            icon: Icon(Icons.assistant_photo),
+            title: Text("Битва"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.accessibility_new),
@@ -69,7 +70,13 @@ class _RootSceneState extends State<RootScene> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      if (index == 1) {
+        if (battleAvailable) {
+          _selectedIndex = index;
+        }
+      } else {
+        _selectedIndex = index;
+      }
     });
   }
 }
