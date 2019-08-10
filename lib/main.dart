@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:crafthack_app/config.dart';
 import 'package:crafthack_app/screens/character.dart';
 import 'package:crafthack_app/screens/dice.dart';
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
 
 import 'utils/Lazy.dart';
 
@@ -34,6 +38,8 @@ class _RootSceneState extends State<RootScene> {
 
   Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
   Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
+
+  final socket = IOWebSocketChannel.connect(SocketUrl);
 
   @override
   Widget build(BuildContext context) {
