@@ -4,7 +4,6 @@ class Character {
   String race;
   String role;
   String biography;
-  int hp;
   Map<CharOption, Char> chars;
   Map<Skill, int> skills;
   int initiative;
@@ -18,7 +17,6 @@ class Character {
       this.race,
       this.role,
       this.biography,
-      this.hp,
       this.chars,
       this.skills,
       this.initiative,
@@ -30,7 +28,7 @@ class Character {
     return Character(
       id: json['id'],
       name: json['name'],
-      hp: json['hp'],
+      biography: json['bio'],
       role: json['role'],
       race: json['race'],
       chars: _parseChars(json['chars']),
