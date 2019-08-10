@@ -14,6 +14,7 @@ class CharacterScreen extends StatelessWidget {
     return Container(
       child: ListView(
         children: <Widget>[
+          Padding(padding: EdgeInsets.only(top: 16),),
           Row(
             children: <Widget>[
               Container(
@@ -80,10 +81,11 @@ class CharacterScreen extends StatelessWidget {
                   return _createSkills(snap.data);
               }
             },
-          )
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 16),),
         ],
       ),
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.only(left: 16, right: 16),
     );
   }
 
