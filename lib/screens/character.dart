@@ -1,5 +1,6 @@
 import 'package:crafthack_app/datasources/character.dart';
 import 'package:crafthack_app/models/Character.dart';
+import 'package:crafthack_app/utils/function.dart';
 import 'package:crafthack_app/widgets/future_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -50,6 +51,9 @@ class CharacterScreen extends StatelessWidget {
             "Будучи в детстве изгнанным из собственного племени, Конан долгое время скитался по пустошам Аркании, сражаясь со страшными монстрами, пока не обрёл величайшую мощь, которой человек может достигнуть.",
             style: TextStyle(color: Colors.black54, fontSize: 16),
           ),
+          Padding(
+            padding: EdgeInsets.all(8),
+          ),
           FutureBuilder(
             future: fChar.then((char) => char.chars),
             builder: (ctx, snap) {
@@ -64,7 +68,7 @@ class CharacterScreen extends StatelessWidget {
                   return _createAttributes(snap.data);
               }
             },
-          )
+          ),
         ],
       ),
       padding: EdgeInsets.all(16),
@@ -72,15 +76,29 @@ class CharacterScreen extends StatelessWidget {
   }
 
   Widget _createAttributes(Map<CharOption, Char> attributes) {
+    Function1<String, Text> attrText = (text) => Text(
+          text,
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.w700, color: Colors.teal),
+        );
     List<Widget> displayList = attributes.keys
         .map((attribute) => Row(
               children: <Widget>[
                 _getAttrIcon(attribute),
-                Text(attribute.toString()),
-                Text(":  "),
-                Text(attributes[attribute].total().toString())
+                Padding(
+                  padding: EdgeInsets.all(4),
+                ),
+                attrText(attribute.toString()),
+                attrText(":  "),
+                attrText(attributes[attribute].total().toString())
               ],
             ))
+        .expand((row) => <Widget>[
+              row,
+              Padding(
+                padding: EdgeInsets.all(4),
+              )
+            ])
         .toList();
     return Column(
       children: displayList,
@@ -111,8 +129,8 @@ class CharacterScreen extends StatelessWidget {
     }
     return SvgPicture.network(
       url,
-      width: 24,
-      height: 24,
+      width: 36,
+      height: 36,
     );
   }
 
