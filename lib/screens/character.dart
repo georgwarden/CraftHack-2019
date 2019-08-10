@@ -68,6 +68,19 @@ class CharacterScreen extends StatelessWidget {
               }
             },
           ),
+          FutureBuilder(
+            future: fChar.then((char) => char.skills),
+            builder: (ctx, snap) {
+              switch (snap.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return CircularProgressIndicator();
+                case ConnectionState.done:
+                  return _createSkills(snap.data);
+              }
+            },
+          )
         ],
       ),
       padding: EdgeInsets.all(16),
@@ -99,6 +112,19 @@ class CharacterScreen extends StatelessWidget {
               )
             ])
         .toList();
+    return Column(
+      children: displayList,
+    );
+  }
+
+  Widget _createSkills(Map<Skill, int> skills) {
+    List<Widget> displayList = skills.keys.map((skill) => Row(
+      children: <Widget>[
+        Text(skill.toString().replaceAll('Skill.', '')),
+        Text(":  "),
+        Text(skills[skill].toString())
+      ],
+    )).toList();
     return Column(
       children: displayList,
     );

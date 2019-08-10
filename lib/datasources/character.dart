@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:crafthack_app/models/Character.dart';
 
@@ -23,7 +24,8 @@ class StubCharacterSource implements CharacterSource {
           CharOption.intelligence: Char(baseValue: 10, modifier: 10),
           CharOption.constitution: Char(baseValue: 10, modifier: 10),
         },
-        skills: null,
+        skills: Map.fromEntries(
+            Skill.values.map((skill) => MapEntry(skill, Random().nextInt(10)))),
         initiative: 5,
         speed: 5,
         armorClass: 0,
