@@ -2,6 +2,7 @@ import 'package:crafthack_app/datasources/character.dart';
 import 'package:crafthack_app/models/Character.dart';
 import 'package:crafthack_app/widgets/future_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class CharacterScreen extends StatelessWidget {
   final CharacterSource _characterSource = StubCharacterSource();
@@ -10,7 +11,7 @@ class CharacterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<Character> fChar = _characterSource.getCharacter();
     return Container(
-      child: Column(
+      child: ListView(
         children: <Widget>[
           Row(
             children: <Widget>[
@@ -48,10 +49,70 @@ class CharacterScreen extends StatelessWidget {
           Text(
             "Будучи в детстве изгнанным из собственного племени, Конан долгое время скитался по пустошам Аркании, сражаясь со страшными монстрами, пока не обрёл величайшую мощь, которой человек может достигнуть.",
             style: TextStyle(color: Colors.black54, fontSize: 16),
+          ),
+          FutureBuilder(
+            future: fChar.then((char) => char.chars),
+            builder: (ctx, snap) {
+              switch (snap.connectionState) {
+                case ConnectionState.none:
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                case ConnectionState.done:
+                  return _createAttributes(snap.data);
+              }
+            },
           )
         ],
       ),
       padding: EdgeInsets.all(16),
+    );
+  }
+
+  Widget _createAttributes(Map<CharOption, Char> attributes) {
+    List<Widget> displayList = attributes.keys
+        .map((attribute) => Row(
+              children: <Widget>[
+                _getAttrIcon(attribute),
+                Text(attribute.toString()),
+                Text(":  "),
+                Text(attributes[attribute].total().toString())
+              ],
+            ))
+        .toList();
+    return Column(
+      children: displayList,
+    );
+  }
+
+  Widget _getAttrIcon(CharOption attr) {
+    String url;
+    switch (attr) {
+      case CharOption.strength:
+        url = "https://image.flaticon.com/icons/svg/94/94085.svg";
+        break;
+      case CharOption.charisma:
+        url = "https://image.flaticon.com/icons/svg/1449/1449953.svg";
+        break;
+      case CharOption.wisdom:
+        url = "https://image.flaticon.com/icons/svg/947/947566.svg";
+        break;
+      case CharOption.dexterity:
+        url = "https://image.flaticon.com/icons/svg/1477/1477296.svg";
+        break;
+      case CharOption.constitution:
+        url = "https://image.flaticon.com/icons/svg/1401/1401497.svg";
+        break;
+      case CharOption.intelligence:
+        url = "https://image.flaticon.com/icons/svg/1491/1491214.svg";
+        break;
+    }
+    return SvgPicture.network(
+      url,
+      width: 24,
+      height: 24,
     );
   }
 
