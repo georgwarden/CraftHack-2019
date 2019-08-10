@@ -15,7 +15,6 @@ class StubCharacterSource implements CharacterSource {
         name: 'Воинственный Конан',
         race: 'Человек',
         role: 'Варвар',
-        hp: 15,
         chars: <CharOption, Char>{
           CharOption.strength: Char(baseValue: 10, modifier: 10),
           CharOption.charisma: Char(baseValue: 10, modifier: 10),
@@ -29,6 +28,6 @@ class StubCharacterSource implements CharacterSource {
         initiative: 5,
         speed: 5,
         armorClass: 0,
-        hits: null);
+        hits: Hits(current: 20, maximum: 20));
   }
 }
