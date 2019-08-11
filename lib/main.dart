@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crafthack_app/config.dart';
+import 'package:crafthack_app/login.dart';
 import 'package:crafthack_app/screens/battle.dart';
 import 'package:crafthack_app/screens/character.dart';
 import 'package:crafthack_app/screens/dice.dart';
@@ -38,6 +39,7 @@ class _RootSceneState extends State<RootScene> {
   int _selectedIndex = 0;
   bool battleAvailable = false;
   int _playerId = 1;
+  bool _login = true;
 
   final socket = IOWebSocketChannel.connect(SocketUrl);
 
@@ -45,16 +47,28 @@ class _RootSceneState extends State<RootScene> {
   Lazy<BattleScreen> _battleScreen;
   Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
 
+  LoginScreen _loginScreen;
+
   @override
   void initState() {
     super.initState();
-    final events = socket.stream
-        .map((json) => Event.fromJson(json));
+    final events = socket.stream.map((json) => Event.fromJson(json));
 
     events.listen(_onEvent);
 
-    _characterScreen = Lazy(() => CharacterScreen(playerId: _playerId,));
-    _battleScreen = Lazy(() => BattleScreen(socketEvents: events,));
+    _characterScreen = Lazy(() => CharacterScreen(
+          playerId: _playerId,
+        ));
+    _battleScreen = Lazy(() => BattleScreen(
+          socketEvents: events,
+        ));
+
+    _loginScreen = LoginScreen(onLogin: (id) {
+      setState(() {
+        _login = false;
+        _playerId = int.parse(id);
+      });
+    });
   }
 
   void _onEvent(Event event) {
@@ -75,30 +89,32 @@ class _RootSceneState extends State<RootScene> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('WyvernApp'),
-      ),
-      body: _buildBody(_selectedIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_box),
-            title: Text("Персонаж"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assistant_photo),
-            title: Text("Битва"),
-          ),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.check_box_outline_blank),
-              title: Text("Кубик"),
-          )
-        ],
-        onTap: _onItemTapped,
-        currentIndex: _selectedIndex,
-      ),
-    );
+    return _login
+        ? _loginScreen
+        : Scaffold(
+            appBar: AppBar(
+              title: Text('WyvernApp'),
+            ),
+            body: _buildBody(_selectedIndex),
+            bottomNavigationBar: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.account_box),
+                  title: Text("Персонаж"),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.assistant_photo),
+                  title: Text("Битва"),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.check_box_outline_blank),
+                  title: Text("Кубик"),
+                )
+              ],
+              onTap: _onItemTapped,
+              currentIndex: _selectedIndex,
+            ),
+          );
   }
 
   Widget _buildBody(int index) {
