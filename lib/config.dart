@@ -1,2 +1,2 @@
 
-const SocketUrl = "";
+const SocketUrl = "wss://echo.websocket.org";

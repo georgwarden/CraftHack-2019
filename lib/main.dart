@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:crafthack_app/config.dart';
+import 'package:crafthack_app/screens/battle.dart';
 import 'package:crafthack_app/screens/character.dart';
 import 'package:crafthack_app/screens/dice.dart';
 import 'package:flutter/material.dart';
@@ -34,32 +35,48 @@ class RootScene extends StatefulWidget {
 }
 
 class _RootSceneState extends State<RootScene> {
-
   int _selectedIndex = 0;
   bool battleAvailable = false;
-
-  Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
-  Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
+  int _playerId = 1;
 
   final socket = IOWebSocketChannel.connect(SocketUrl);
+
+  Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
+  Lazy<BattleScreen> _battleScreen;
+  Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
 
   @override
   void initState() {
     super.initState();
-    socket.stream.map((json) => jsonDecode(json))
-        .map((json) => Event.fromJson(json))
-        .listen(_onEvent);
+    final events = socket.stream
+        .map((json) => Event.fromJson(json));
+
+    events.listen(_onEvent);
+
+    _battleScreen = Lazy(() => BattleScreen(socketEvents: events,));
   }
 
   void _onEvent(Event event) {
-
+    switch (event.type) {
+      case EventType.hit_event:
+        break;
+      case EventType.begin_battle:
+        setState(() {
+          battleAvailable = true;
+        });
+        break;
+      case EventType.turn:
+        break;
+      case EventType.pass:
+        break;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('sss'),
+        title: Text('WyvernApp'),
       ),
       body: _buildBody(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -73,8 +90,8 @@ class _RootSceneState extends State<RootScene> {
             title: Text("Битва"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.check_box_outline_blank),
-            title: Text("Кубик")
+              icon: Icon(Icons.check_box_outline_blank),
+              title: Text("Кубик"),
           )
         ],
         onTap: _onItemTapped,
@@ -84,9 +101,11 @@ class _RootSceneState extends State<RootScene> {
   }
 
   Widget _buildBody(int index) {
-    switch(index) {
+    switch (index) {
       case 0:
         return _characterScreen.get();
+      case 1:
+        return _battleScreen.get();
       case 2:
         return _diceScreen.get();
     }
