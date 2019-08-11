@@ -6,15 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CharacterScreen extends StatelessWidget {
-  final CharacterSource _characterSource = StubCharacterSource();
+  final CharacterSource _characterSource = NetworkCharacterSource();
+  final int playerId;
+
+  CharacterScreen({this.playerId});
 
   @override
   Widget build(BuildContext context) {
-    Future<Character> fChar = _characterSource.getCharacter();
+    Future<Character> fChar = _characterSource.getCharacter(playerId);
     return Container(
       child: ListView(
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(top: 16),),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+          ),
           Row(
             children: <Widget>[
               Container(
@@ -48,12 +53,20 @@ class CharacterScreen extends StatelessWidget {
               )
             ],
           ),
-          Text(
-            "Будучи в детстве изгнанным из собственного племени, Конан долгое время скитался по пустошам Аркании, сражаясь со страшными монстрами, пока не обрёл величайшую мощь, которой человек может достигнуть.",
-            style: TextStyle(color: Colors.black54, fontSize: 16),
+          TextFutureLoader(
+            future: fChar.then((char) => char.biography),
+            widgetBuilder: (text) => Text(
+                  text,
+                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                ),
           ),
-          Divider(color: Colors.black, height: 16,),
-          Padding(padding: EdgeInsets.only(top: 8),),
+          Divider(
+            color: Colors.black,
+            height: 16,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 8),
+          ),
           FutureBuilder(
             future: fChar.then((char) => char.chars),
             builder: (ctx, snap) {
@@ -69,7 +82,9 @@ class CharacterScreen extends StatelessWidget {
               }
             },
           ),
-          Divider(color: Colors.black,),
+          Divider(
+            color: Colors.black,
+          ),
           FutureBuilder(
             future: fChar.then((char) => char.skills),
             builder: (ctx, snap) {
@@ -83,7 +98,9 @@ class CharacterScreen extends StatelessWidget {
               }
             },
           ),
-          Padding(padding: EdgeInsets.only(bottom: 16),),
+          Padding(
+            padding: EdgeInsets.only(bottom: 16),
+          ),
         ],
       ),
       padding: EdgeInsets.only(left: 16, right: 16),
@@ -121,13 +138,15 @@ class CharacterScreen extends StatelessWidget {
   }
 
   Widget _createSkills(Map<Skill, int> skills) {
-    List<Widget> displayList = skills.keys.map((skill) => Row(
-      children: <Widget>[
-        Text(skill.toString().replaceAll('Skill.', '')),
-        Text(":  "),
-        Text(skills[skill].toString())
-      ],
-    )).toList();
+    List<Widget> displayList = skills.keys
+        .map((skill) => Row(
+              children: <Widget>[
+                Text(skill.toString().replaceAll('Skill.', '')),
+                Text(":  "),
+                Text(skills[skill].toString())
+              ],
+            ))
+        .toList();
     return Column(
       children: displayList,
     );

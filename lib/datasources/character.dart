@@ -1,15 +1,31 @@
-import 'dart:io';
+import 'dart:convert';
 import 'dart:math';
 
+import 'package:http/http.dart' as http;
 import 'package:crafthack_app/models/Character.dart';
 
 abstract class CharacterSource {
-  Future<Character> getCharacter();
+  Future<Character> getCharacter(int id);
+}
+
+class NetworkCharacterSource implements CharacterSource {
+
+  @override
+  Future<Character> getCharacter(int id) async {
+    http.Response res = await http.get(
+      "https://crafthack.herokuapp.com/user/" + id.toString(),
+    );
+    if (res.statusCode == 200)
+      return Character.fromJson(jsonDecode(res.body));
+    else
+      return null;
+  }
+
 }
 
 class StubCharacterSource implements CharacterSource {
   @override
-  Future<Character> getCharacter() async {
+  Future<Character> getCharacter(int id) async {
     return Character(
         id: 0,
         name: 'Воинственный Конан',

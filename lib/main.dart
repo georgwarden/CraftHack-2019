@@ -41,7 +41,7 @@ class _RootSceneState extends State<RootScene> {
 
   final socket = IOWebSocketChannel.connect(SocketUrl);
 
-  Lazy<CharacterScreen> _characterScreen = Lazy(() => CharacterScreen());
+  Lazy<CharacterScreen> _characterScreen;
   Lazy<BattleScreen> _battleScreen;
   Lazy<DiceScreen> _diceScreen = Lazy(() => DiceScreen());
 
@@ -53,6 +53,7 @@ class _RootSceneState extends State<RootScene> {
 
     events.listen(_onEvent);
 
+    _characterScreen = Lazy(() => CharacterScreen(playerId: _playerId,));
     _battleScreen = Lazy(() => BattleScreen(socketEvents: events,));
   }
 
