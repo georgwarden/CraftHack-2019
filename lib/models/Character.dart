@@ -26,23 +26,22 @@ class Character {
 
   factory Character.fromJson(Map<String, dynamic> json) {
     return Character(
-      id: json['id'],
-      name: json['name'],
-      biography: json['bio'],
-      role: json['role'],
-      race: json['race'],
-      chars: _parseChars(json['chars']),
-      skills: _parseSkills(json['skills']),
-      initiative: json['initiative'],
-      speed: json['speed'],
-      armorClass: json['armorClass'],
-      hits: Hits.fromJson(json['hits'])
-    );
+        id: json['id'],
+        name: json['name'],
+        biography: json['bio'],
+        role: json['role'],
+        race: json['race'],
+        chars: _parseChars(json['chars']),
+        skills: _parseSkills(json['skills']),
+        initiative: json['initiative'],
+        speed: json['speed'],
+        armorClass: json['armorClass'],
+        hits: Hits.fromJson(json['hits']));
   }
 
   static Map<Skill, int> _parseSkills(Map<String, dynamic> json) {
     return json.map((name, value) {
-      switch(name) {
+      switch (name) {
         case 'acrobatics':
           return MapEntry(Skill.acrobatics, value);
         case 'animalHanding':
@@ -83,23 +82,9 @@ class Character {
 
   static Map<CharOption, Char> _parseChars(Map<String, dynamic> json) {
     return json.map((name, value) {
-      switch(name) {
-        case 'strength':
-          return MapEntry(CharOption.strength, Char.fromJson(value));
-        case 'dexterity':
-          return MapEntry(CharOption.dexterity, Char.fromJson(value));
-        case 'constitution':
-          return MapEntry(CharOption.constitution, Char.fromJson(value));
-        case 'intelligence':
-          return MapEntry(CharOption.intelligence, Char.fromJson(value));
-        case 'wisdom':
-          return MapEntry(CharOption.wisdom, Char.fromJson(value));
-        case 'charisma':
-          return MapEntry(CharOption.charisma, Char.fromJson(value));
-      }
+      return MapEntry(charFromString(name), Char.fromJson(value));
     });
   }
-
 }
 
 class Hits {
@@ -135,6 +120,23 @@ enum CharOption {
   intelligence,
   wisdom,
   charisma
+}
+
+CharOption charFromString(String str) {
+  switch (str) {
+    case 'strength':
+      return CharOption.strength;
+    case 'dexterity':
+      return CharOption.dexterity;
+    case 'constitution':
+      return CharOption.constitution;
+    case 'intelligence':
+      return CharOption.intelligence;
+    case 'wisdom':
+      return CharOption.wisdom;
+    case 'charisma':
+      return CharOption.charisma;
+  }
 }
 
 enum Skill {
