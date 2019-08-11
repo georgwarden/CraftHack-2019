@@ -18,6 +18,8 @@ class BattleScreen extends StatefulWidget {
 
 class _BattleState extends State<BattleScreen> {
 
+  bool _turn = false;
+
   @override
   void initState() {
     super.initState();
@@ -30,20 +32,25 @@ class _BattleState extends State<BattleScreen> {
         // TODO: Handle this case.
         break;
       case EventType.begin_battle:
-        // TODO: Handle this case.
         break;
       case EventType.turn:
-        // TODO: Handle this case.
+        setState(() {
+          _turn = true;
+        });
         break;
       case EventType.pass:
-        // TODO: Handle this case.
+        setState(() {
+          _turn = false;
+        });
         break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
+    return Center(
+      child: Image.asset(_turn ? "assets/sunrise.png" : "assets/moon.png"),
+    );
   }
 
 }
